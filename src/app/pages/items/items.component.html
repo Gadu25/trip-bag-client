@@ -1,0 +1,25 @@
+<div class="items-page">
+  <div class="items">
+    <h4>List of Items</h4>
+    <div *ngFor="let item of items">
+      <p>{{ item.name }} - {{item.isPacked ? '✅' : '❌'}}</p>
+      <button (click)="updateThis(item)">update</button>
+      <button (click)="delete(item.id)">delete</button>
+    </div>
+  </div>
+  <div class="form">
+    <h4>Item Form</h4>
+    <form (ngSubmit)="save()">
+      <input [(ngModel)]="formItem.name" type="text" name="name" placeholder="New item name"/>
+      <select [(ngModel)]="formItem.category" name="category">
+        <option value="essential">Essential</option>
+        <option value="necessity">Necessity</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="gadget">Gadget</option>
+      </select>
+      <input [(ngModel)]="formItem.isPacked" type="checkbox" name="isPacked"/>
+      <button type="submit">Save</button>
+    </form>
+
+  </div>
+</div>

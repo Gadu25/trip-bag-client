@@ -1,0 +1,14 @@
+.items-page {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+  width: 70vw;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: start;
+}
