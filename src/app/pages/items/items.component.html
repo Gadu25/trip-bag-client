@@ -1,25 +1,37 @@
 <div class="items-page">
-  <div class="items">
-    <h4>List of Items</h4>
-    <div *ngFor="let item of items">
-      <p>{{ item.name }} - {{item.isPacked ? '✅' : '❌'}}</p>
-      <button (click)="updateThis(item)">update</button>
-      <button (click)="delete(item.id)">delete</button>
-    </div>
+  <div *ngIf="isLoading; else showItems" class="loading">
+    <span>Loading...</span>
   </div>
-  <div class="form">
-    <h4>Item Form</h4>
-    <form (ngSubmit)="save()">
-      <input [(ngModel)]="formItem.name" type="text" name="name" placeholder="New item name"/>
-      <select [(ngModel)]="formItem.category" name="category">
-        <option value="essential">Essential</option>
-        <option value="necessity">Necessity</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="gadget">Gadget</option>
-      </select>
-      <input [(ngModel)]="formItem.isPacked" type="checkbox" name="isPacked"/>
-      <button type="submit">Save</button>
-    </form>
 
-  </div>
+  <ng-template #showItems>
+    <div class="items">
+      <h4>List of Items</h4>
+      <div class="item-list">
+        <app-item-card 
+          *ngFor="let item of items" 
+          [item]="item"
+          (update)="updateThis($event)"
+          (delete)="delete($event)"
+        >
+        </app-item-card>
+      </div>
+    </div>
+    <div class="form">
+      <h4>Item Form</h4>
+      <form (ngSubmit)="save()">
+        <input [(ngModel)]="formItem.name" type="text" name="name" placeholder="New item name"/>
+        <select [(ngModel)]="formItem.category" name="category">
+          <option value="essential">Essential</option>
+          <option value="necessity">Necessity</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="gadget">Gadget</option>
+        </select>
+        <div class="checker">
+          <label>Already packed?</label>
+          <input [(ngModel)]="formItem.isPacked" type="checkbox" name="isPacked"/>
+        </div>
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </ng-template>
 </div>

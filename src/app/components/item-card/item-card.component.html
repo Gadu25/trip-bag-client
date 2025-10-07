@@ -1,1 +1,9 @@
-<p>item-card works!</p>
+<div class="card">
+  <h5 class="title">{{ item.name }}</h5>
+  <span class="category">{{ item.category }}</span>
+  <p class="packed" [ngClass]="{active: item.isPacked}">packed 👍</p>
+  <div class="actions">
+    <button class="btn btn-update" (click)="onUpdate()">Update</button>
+    <button class="btn btn-delete" (click)="onDelete()">Delete</button>
+  </div>
+</div>

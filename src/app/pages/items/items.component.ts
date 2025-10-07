@@ -3,10 +3,11 @@ import { ItemService } from '../../service/item.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import type { Item } from '../../types/item.model';
+import { ItemCardComponent } from '../../components/item-card/item-card.component';
 
 @Component({
   selector: 'app-items',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ItemCardComponent],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'
 })
@@ -19,32 +20,54 @@ export class ItemsComponent {
     isPacked: false
   };
   isUpdate:boolean = false;
+  isLoading:boolean = false;
 
   constructor (private itemService:ItemService) {}
 
   ngOnInit () {
-    this.items = this.itemService.getAll();
+    this.isLoading = true;
+    this.itemService.getAll().subscribe({
+      next: (data) => this.items = data,
+      error: (err) => console.error('Error fetching items:', err),
+      complete: () => this.isLoading = false
+    })
   }
 
-  save () {
-    if (this.isUpdate) {
-      this.itemService.update(this.formItem);
-      this.isUpdate = false;
-    } else {
-      this.itemService.add(this.formItem);
-    }
-    this.items = this.itemService.getAll();
+  private refreshItems () {
+    this.itemService.getAll().subscribe({
+      next: (data) => this.items = data
+    });
+  }
+
+  private resetForm () {
     this.formItem = {
       id: 0,
       name: "",
       category: "",
       isPacked: false
     }
+    this.isUpdate = false;
+  }
+
+  save () {
+    const request = this.isUpdate
+      ? this.itemService.update(this.formItem)
+      : this.itemService.add(this.formItem);
+
+    request.subscribe({
+      next: () => {
+        this.refreshItems();
+        this.resetForm();
+      },
+      error: (err) => console.error('Save failed', err)
+    });
   }
 
   delete (id:number) {
-    this.itemService.remove(id);
-    this.items = this.itemService.getAll();
+    this.itemService.remove(id).subscribe({
+      next: () => this.refreshItems(),
+      error: (err) => console.error('Delete failed:', err)
+    });
   }
 
   updateThis (item:Item) {
